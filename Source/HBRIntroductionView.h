@@ -31,7 +31,7 @@ typedef enum {
 /******************************/
 //Delegate Method Declarations
 /******************************/
-@protocol MYIntroductionDelegate
+@protocol HBRIntroductionDelegate
 @optional
 -(void)introduction:(HBRIntroductionView *)introductionView didFinishWithType:(MYFinishType)finishType;
 -(void)introduction:(HBRIntroductionView *)introductionView didChangeToPanel:(HBRIntroductionPanel *)panel withIndex:(NSInteger)panelIndex;
@@ -51,7 +51,7 @@ typedef enum {
 /******************************/
 
 //Delegate
-@property (weak) id <MYIntroductionDelegate> delegate;
+@property (weak) id <HBRIntroductionDelegate> delegate;
 
 @property (nonatomic, retain) UIView *BlurView;
 @property (nonatomic, retain) UIView *BackgroundColorView;

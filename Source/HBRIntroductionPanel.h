@@ -33,6 +33,8 @@ static UIColor *kSeparatorLineColor = nil;
 - (id)initWithFrame:(CGRect)frame title:(NSString *)title description:(NSString *)description image:(UIImage *)image header:(UIView *)headerView;
 - (id)initWithFrame:(CGRect)frame nibNamed:(NSString *)nibName;
 
++ (NSArray *)allPanelsWithFrame:(CGRect)frame inNib:(NSString *)nibName;
+
 - (void)hideContent;
 - (void)showContent;
 
