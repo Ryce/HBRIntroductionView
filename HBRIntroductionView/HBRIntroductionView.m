@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 Matthew York. All rights reserved.
 //
 
-#import "MYBlurIntroductionView.h"
+#import "HBRIntroductionView.h"
 
-@implementation MYBlurIntroductionView
+@implementation HBRIntroductionView
 @synthesize delegate;
 
 /**
@@ -54,17 +54,12 @@
     
     //Get skipString dimensions
     NSString *skipString = NSLocalizedString(@"Skip", nil);
-    CGFloat skipStringWidth = 0;
     kSkipButtonFont = [UIFont systemFontOfSize:16];
     
-    if ([MYIntroductionPanel runningiOS7]) {
-        NSDictionary *titleAttributes = [NSDictionary dictionaryWithObject:kSkipButtonFont forKey: NSFontAttributeName];
-        skipStringWidth = [skipString boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:titleAttributes context:nil].size.width;
-        skipStringWidth = ceilf(skipStringWidth);
-    }
-    else {
-        skipStringWidth = [skipString sizeWithFont:kSkipButtonFont constrainedToSize:CGSizeMake(MAXFLOAT, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping].width;
-    }
+    CGRect skipStringFrame = [skipString boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT)
+                                                      options:NSStringDrawingUsesLineFragmentOrigin
+                                                   attributes:@{NSFontAttributeName:kSkipButtonFont}
+                                                      context:nil];
     
     //Left Skip Button
     self.LeftSkipButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -76,7 +71,7 @@
     
     //Right Skip Button
     self.RightSkipButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.RightSkipButton.frame = CGRectMake(self.frame.size.width - skipStringWidth - kLeftRightSkipPadding, self.frame.size.height - 48, skipStringWidth, 37);
+    self.RightSkipButton.frame = CGRectMake(self.frame.size.width - skipStringFrame.size.width - kLeftRightSkipPadding, self.frame.size.height - 48, skipStringFrame.size.width, 37);
     [self.RightSkipButton.titleLabel setFont:kSkipButtonFont];
     [self.RightSkipButton setTitle:skipString forState:UIControlStateNormal];
     [self.RightSkipButton addTarget:self action:@selector(didPressSkipButton) forControlEvents:UIControlEventTouchUpInside];
@@ -85,7 +80,7 @@
 
 -(void)buildIntroductionWithPanels:(NSArray *)panels{
     Panels = panels;
-    for (MYIntroductionPanel *panel in Panels) {
+    for (HBRIntroductionPanel *panel in Panels) {
         panel.parentIntroductionView = self;
     }
 
@@ -135,7 +130,7 @@
 
 -(void)buildScrollViewLeftToRight{
     CGFloat panelXOffset = 0;
-    for (MYIntroductionPanel *panelView in Panels) {
+    for (HBRIntroductionPanel *panelView in Panels) {
         panelView.frame = CGRectMake(panelXOffset, 0, self.frame.size.width, self.frame.size.height);
         [self.MasterScrollView addSubview:panelView];
         
@@ -160,7 +155,7 @@
     CGFloat panelXOffset = self.frame.size.width*Panels.count;
     [self.MasterScrollView setContentSize:CGSizeMake(panelXOffset + self.frame.size.width, self.frame.size.height)];
     
-    for (MYIntroductionPanel *panelView in Panels) {
+    for (HBRIntroductionPanel *panelView in Panels) {
         //Update panelXOffset to next view origin location
         panelView.frame = CGRectMake(panelXOffset, 0, self.frame.size.width, self.frame.size.height);
         [self.MasterScrollView addSubview:panelView];
@@ -283,7 +278,7 @@
     //If it is a custom panel, skip stock animation
     
     //Hide all labels
-    for (MYIntroductionPanel *panelView in Panels) {
+    for (HBRIntroductionPanel *panelView in Panels) {
         [panelView hideContent];
     }
     

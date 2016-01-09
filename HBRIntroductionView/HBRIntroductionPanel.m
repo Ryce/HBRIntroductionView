@@ -6,11 +6,11 @@
 //  Copyright (c) 2013 Matthew York. All rights reserved.
 //
 
-#import "MYIntroductionPanel.h"
+#import "HBRIntroductionPanel.h"
 
-@interface MYIntroductionPanel ()
+@interface HBRIntroductionPanel ()
 
-@property (nonatomic, retain) UIView *PanelHeaderView;
+@property (nonatomic, retain) UIView *panelHeaderView;
 @property (nonatomic, retain) NSString *PanelTitle;
 @property (nonatomic, retain) NSString *PanelDescription;
 @property (nonatomic, retain) UILabel *PanelTitleLabel;
@@ -23,7 +23,7 @@
 
 @end
 
-@implementation MYIntroductionPanel
+@implementation HBRIntroductionPanel
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -53,13 +53,27 @@
         // Initialization code
         [self initializeConstants];
         
-        self.PanelHeaderView = headerView;
+        self.panelHeaderView = headerView;
         self.PanelTitle = title;
         self.PanelDescription = description;
         self.PanelImageView = [[UIImageView alloc] initWithImage:image];
         [self buildPanelWithFrame:frame];
     }
     return self;
+}
+
++ (NSArray *)allPanelsWithFrame:(CGRect)frame inNib:(NSString *)nibName {
+    NSMutableArray *panels = [NSMutableArray array];
+    NSArray *items = [[NSBundle mainBundle] loadNibNamed:nibName owner:nil options:nil];
+    for (HBRIntroductionPanel *view in items) {
+        if ([view isKindOfClass:[HBRIntroductionPanel class]]) {
+            view.frame = frame;
+            view.isCustomPanel = YES;
+            view.hasCustomAnimation = NO;
+            [panels addObject:view];
+        }
+    }
+    return panels;
 }
 
 -(id)initWithFrame:(CGRect)frame nibNamed:(NSString *)nibName{
@@ -91,15 +105,15 @@
     CGFloat runningYOffset = kTopPadding;
     
     //Process panel header view, if it exists
-    if (self.PanelHeaderView) {
-        self.PanelHeaderView.frame = CGRectMake((frame.size.width - self.PanelHeaderView.frame.size.width)/2, runningYOffset, self.PanelHeaderView.frame.size.width, self.PanelHeaderView.frame.size.height);
-        [self addSubview:self.PanelHeaderView];
+    if (self.panelHeaderView) {
+        self.panelHeaderView.frame = CGRectMake((frame.size.width - self.panelHeaderView.frame.size.width)/2, runningYOffset, self.panelHeaderView.frame.size.width, self.panelHeaderView.frame.size.height);
+        [self addSubview:self.panelHeaderView];
         
-        runningYOffset += self.PanelHeaderView.frame.size.height + kHeaderTitlePadding;
+        runningYOffset += self.panelHeaderView.frame.size.height + kHeaderTitlePadding;
     }
     
     //Calculate title and description heights
-    if ([MYIntroductionPanel runningiOS7]) {
+    if ([HBRIntroductionPanel runningiOS7]) {
         //Calculate Title Height
         NSDictionary *titleAttributes = [NSDictionary dictionaryWithObject:kTitleFont forKey: NSFontAttributeName];
         panelTitleHeight = [self.PanelTitle boundingRectWithSize:CGSizeMake(frame.size.width - 2*kLeftRightMargins, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:titleAttributes context:nil].size.height;
@@ -109,11 +123,10 @@
         NSDictionary *descriptionAttributes = [NSDictionary dictionaryWithObject:kDescriptionFont forKey: NSFontAttributeName];
         panelDescriptionHeight = [self.PanelDescription boundingRectWithSize:CGSizeMake(frame.size.width - 2*kLeftRightMargins, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:descriptionAttributes context:nil].size.height;
         panelDescriptionHeight = ceilf(panelDescriptionHeight);
-    }
-    else {
-        panelTitleHeight = [self.PanelTitle sizeWithFont:kTitleFont constrainedToSize:CGSizeMake(frame.size.width - 2*kLeftRightMargins, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping].height;
+    } else {
+        panelTitleHeight = [self.PanelTitle boundingRectWithSize:CGSizeMake(frame.size.width - 2*kLeftRightMargins, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:kTitleFont} context:nil].size.height;
         
-        panelDescriptionHeight = [self.PanelDescription sizeWithFont:kDescriptionFont constrainedToSize:CGSizeMake(frame.size.width - 2*kLeftRightMargins, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping].height;
+        panelDescriptionHeight = [self.PanelDescription boundingRectWithSize:CGSizeMake(frame.size.width - 2*kLeftRightMargins, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:kDescriptionFont} context:nil].size.height;
     }
     
     //Create title label
@@ -164,8 +177,8 @@
     _PanelTitleLabel.alpha = 0;
     _PanelDescriptionLabel.alpha = 0;
     _PanelSeparatorLine.alpha = 0;
-    if (_PanelHeaderView) {
-        _PanelHeaderView.alpha = 0;
+    if (_panelHeaderView) {
+        _panelHeaderView.alpha = 0;
     }
     _PanelImageView.alpha = 0;
 }
@@ -178,8 +191,8 @@
     
     //Get initial frames
     CGRect initialHeaderFrame = CGRectZero;
-    if ([self PanelHeaderView]) {
-        initialHeaderFrame = [self PanelHeaderView].frame;
+    if ([self panelHeaderView]) {
+        initialHeaderFrame = self.panelHeaderView.frame;
     }
     CGRect initialTitleFrame = [self PanelTitleLabel].frame;
     CGRect initialDescriptionFrame = [self PanelDescriptionLabel].frame;
@@ -188,7 +201,7 @@
     //Offset frames
     [[self PanelTitleLabel] setFrame:CGRectMake(initialTitleFrame.origin.x + 10, initialTitleFrame.origin.y, initialTitleFrame.size.width, initialTitleFrame.size.height)];
     [[self PanelDescriptionLabel] setFrame:CGRectMake(initialDescriptionFrame.origin.x + 10, initialDescriptionFrame.origin.y, initialDescriptionFrame.size.width, initialDescriptionFrame.size.height)];
-    [[self PanelHeaderView] setFrame:CGRectMake(initialHeaderFrame.origin.x, initialHeaderFrame.origin.y - 10, initialHeaderFrame.size.width, initialHeaderFrame.size.height)];
+    [[self panelHeaderView] setFrame:CGRectMake(initialHeaderFrame.origin.x, initialHeaderFrame.origin.y - 10, initialHeaderFrame.size.width, initialHeaderFrame.size.height)];
     [[self PanelImageView] setFrame:CGRectMake(initialImageFrame.origin.x, initialImageFrame.origin.y + 10, initialImageFrame.size.width, initialImageFrame.size.height)];
     
     //Animate title and header
@@ -197,9 +210,9 @@
         [[self PanelTitleLabel] setFrame:initialTitleFrame];
         [[self PanelSeparatorLine] setAlpha:1];
         
-        if ([self PanelHeaderView]) {
-            [[self PanelHeaderView] setAlpha:1];
-            [[self PanelHeaderView] setFrame:initialHeaderFrame];
+        if ([self panelHeaderView]) {
+            [[self panelHeaderView] setAlpha:1];
+            [[self panelHeaderView] setFrame:initialHeaderFrame];
         }
     } completion:^(BOOL finished) {
         //Animate description

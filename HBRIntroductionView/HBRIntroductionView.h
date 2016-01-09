@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 
-#import "MYIntroductionPanel.h"
+#import "HBRIntroductionPanel.h"
 
 static const CGFloat kPageControlWidth = 148;
 static const CGFloat kLeftRightSkipPadding = 10;
@@ -26,21 +26,21 @@ typedef enum {
     MYLanguageDirectionRightToLeft
 }MYLanguageDirection;
 
-@class MYBlurIntroductionView;
+@class HBRIntroductionView;
 
 /******************************/
 //Delegate Method Declarations
 /******************************/
 @protocol MYIntroductionDelegate
 @optional
--(void)introduction:(MYBlurIntroductionView *)introductionView didFinishWithType:(MYFinishType)finishType;
--(void)introduction:(MYBlurIntroductionView *)introductionView didChangeToPanel:(MYIntroductionPanel *)panel withIndex:(NSInteger)panelIndex;
+-(void)introduction:(HBRIntroductionView *)introductionView didFinishWithType:(MYFinishType)finishType;
+-(void)introduction:(HBRIntroductionView *)introductionView didChangeToPanel:(HBRIntroductionPanel *)panel withIndex:(NSInteger)panelIndex;
 @end
 
 /******************************/
 //MYBlurIntroductionView
 /******************************/
-@interface MYBlurIntroductionView : UIView <UIScrollViewDelegate>{
+@interface HBRIntroductionView : UIView <UIScrollViewDelegate>{
     NSArray *Panels;
     
     NSInteger LastPanelIndex;
