@@ -12,8 +12,8 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/ryce/HBRIntroductionView.git", 
                      :tag => "1.0.0" }
 
-  s.platform = :ios, '8.0'
+  s.ios.deployment_target = '8.0'
 
-  s.source_files = 'HBRIntroductionView'
+  s.source_files = 'Source/*.*'
   s.frameworks = 'QuartzCore'
 end
