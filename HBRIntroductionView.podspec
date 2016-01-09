@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'HBRIntroductionView'
-  s.version      = '1.0.0'
+  s.version      = '1.0.1'
   s.summary      = 'A controller for building custom app introductions and tutorials.'
   s.homepage     = 'https://github.com/ryce/HBRIntroductionView'
 
@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.author       = { "Hamon Riazy" => "hamon.riazy@gmail.com" }
 
   s.source       = { :git => "https://github.com/ryce/HBRIntroductionView.git", 
-                     :tag => "1.0.0" }
+                     :tag => s.version.to_s }
 
   s.ios.deployment_target = '8.0'
 
